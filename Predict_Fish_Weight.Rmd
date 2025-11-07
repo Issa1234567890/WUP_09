@@ -86,9 +86,38 @@ After running this code, I found the best single element regression model (Heigh
 
 ## Pike
 
+```{r}
+Pike <- filter(fish, Species == "Pike")
+Pike <- select(Pike, -Species)
+```
+
+
 ### Best Models
 
+```{r}
+Pikemodel1 <- lm(Weight~ .,data=Pike)
+summary.lm(Pikemodel1)
+```
+
 ### Best Two regressor model
+
+```{r}
+library(leaps)
+Pikemodel1automate <-
+    regsubsets(Weight ~ .,
+               data = Pike,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.Pike <- summary(Pikemodel1automate)
+as.data.frame(summary.Pike$outmat)
+library(car)
+subsets(Pikemodel1automate,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+After running the code for the Pike, I was able to get that the best 2 regressor models were Length 1 and Length 3. However, The best regressor models were Length 1,2 and 3 along with Height and Width which is the complete model. All of the models were judged based on the Adjusted R square values.
 
 ## Roach
 
